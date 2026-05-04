@@ -8,7 +8,7 @@
     "android": "expo start --android --lan",
     "ios": "expo start --ios --lan",
     "web": "expo start --web",
-    "web:build": "expo export --platform web --output-dir dist"
+    "web:build": "expo export --platform web --output-dir dist --public-url ./"
   },
   "dependencies": {
     "@expo/ngrok": "4.1.0",
