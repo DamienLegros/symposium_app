@@ -1,0 +1,24 @@
+{
+  "name": "roll-and-roam",
+  "version": "0.1.0",
+  "private": true,
+  "main": "node_modules/expo/AppEntry.js",
+  "scripts": {
+    "start": "expo start --lan",
+    "android": "expo start --android --lan",
+    "ios": "expo start --ios --lan",
+    "web": "expo start --web",
+    "web:build": "expo export --platform web --output-dir dist"
+  },
+  "dependencies": {
+    "@expo/ngrok": "4.1.0",
+    "@expo/webpack-config": "^18.0.1",
+    "@react-native-async-storage/async-storage": "1.17.11",
+    "@supabase/supabase-js": "^2.105.1",
+    "expo": "~48.0.0",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "react-native": "0.71.14",
+    "react-native-web": "~0.18.10"
+  }
+}
