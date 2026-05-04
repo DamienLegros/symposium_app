@@ -74,7 +74,7 @@ create policy "public update" on game_state for update using (true);
 
 GitHub Pages deploy
 
-1. Ensure `app.json` has the correct `web.publicPath` for your repo.
+1. Ensure `app.json` has `web.publicPath` set to `./` for relative assets.
 2. Push to GitHub and enable Pages (GitHub Actions) in repo settings.
 3. Add repo secrets:
 	- `EXPO_PUBLIC_SUPABASE_URL`
