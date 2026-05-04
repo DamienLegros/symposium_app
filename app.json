@@ -7,7 +7,7 @@
     "sdkVersion": "48.0.0",
     "web": {
       "publicPath": "/symposium_app/",
-      "bundler": "webpack"
+      "bundler": "metro"
     }
   }
 }
