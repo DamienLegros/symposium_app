@@ -19,6 +19,12 @@ const STATE_TABLE = 'game_state';
 const STATE_ROW_ID = 1;
 const NAMES_TABLE = 'player_names';
 const PROFILE_KEY = '@rar_profile';
+const ADMIN_MAP = {
+  admin1: 'A',
+  admin2: 'B',
+  admin3: 'C',
+  admin4: 'D'
+};
 
 const supabaseUrl = process.env.EXPO_PUBLIC_SUPABASE_URL;
 const supabaseKey = process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY;
@@ -43,6 +49,7 @@ export default function App() {
   const [playerName, setPlayerName] = useState('');
   const [currentRoom, setCurrentRoom] = useState(null);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [adminRoom, setAdminRoom] = useState(null);
   const [nameError, setNameError] = useState('');
 
   const timerRef = useRef(null);
@@ -63,7 +70,10 @@ export default function App() {
         const profile = JSON.parse(storedProfile);
         if (profile?.name) {
           setPlayerName(profile.name);
-          setIsAdmin(profile.name.toLowerCase() === 'admin');
+          const lower = profile.name.toLowerCase();
+          const room = ADMIN_MAP[lower] || null;
+          setIsAdmin(Boolean(room));
+          setAdminRoom(room);
           setPage('lobby');
         }
       }
@@ -278,7 +288,10 @@ export default function App() {
 
     await AsyncStorage.setItem(PROFILE_KEY, JSON.stringify({ name }));
     setPlayerName(name);
-    setIsAdmin(name.toLowerCase() === 'admin');
+    const lower = name.toLowerCase();
+    const room = ADMIN_MAP[lower] || null;
+    setIsAdmin(Boolean(room));
+    setAdminRoom(room);
     setPage('lobby');
   }
 
@@ -299,6 +312,7 @@ export default function App() {
     await AsyncStorage.removeItem(PROFILE_KEY);
     setPlayerName('');
     setIsAdmin(false);
+    setAdminRoom(null);
     setCurrentRoom(null);
     setLastRoll('');
     setNameInput('');
@@ -419,7 +433,7 @@ export default function App() {
         <TouchableOpacity style={styles.primaryButton} onPress={claimName}>
           <Text style={styles.primaryButtonText}>Continue</Text>
         </TouchableOpacity>
-        <Text style={styles.helperText}>Use "admin" to access the admin controls.</Text>
+        <Text style={styles.helperText}>Use admin1/admin2/admin3/admin4 to access room admin controls.</Text>
       </View>
     );
   }
@@ -516,7 +530,7 @@ export default function App() {
         <Text style={styles.pageTitle}>Admin</Text>
         <View style={styles.rowBetween}>
           <Text style={styles.infoText}>Sync: {syncStatus}</Text>
-          <Text style={styles.infoText}>Session S{activeSession + 1}</Text>
+          <Text style={styles.infoText}>Room {adminRoom || '-'}</Text>
         </View>
         <View style={styles.sessionRow}>
           {Array.from({ length: SESSION_COUNT }).map((_, idx) => (
@@ -533,18 +547,18 @@ export default function App() {
         </TouchableOpacity>
 
         <Text style={styles.sectionTitle}>Room Topics</Text>
-        {ROOM_NAMES.map(id => (
-          <View key={id} style={styles.topicRow}>
-            <Text style={styles.topicLabel}>Room {id}</Text>
+        {adminRoom ? (
+          <View style={styles.topicRow}>
+            <Text style={styles.topicLabel}>Room {adminRoom}</Text>
             <TextInput
               placeholder="Hot topic"
               placeholderTextColor="#999"
               style={styles.topicInput}
-              value={roomTopics[id]}
-              onChangeText={text => setRoomTopics(prev => ({ ...prev, [id]: text }))}
+              value={roomTopics[adminRoom]}
+              onChangeText={text => setRoomTopics(prev => ({ ...prev, [adminRoom]: text }))}
             />
           </View>
-        ))}
+        ) : null}
 
         <Text style={styles.sectionTitle}>Registration</Text>
         <View style={styles.rowBetween}>
