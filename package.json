@@ -1,6 +1,7 @@
 {
   "name": "roll-and-roam",
   "version": "0.1.0",
+  "homepage": "/symposium_app/",
   "private": true,
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
