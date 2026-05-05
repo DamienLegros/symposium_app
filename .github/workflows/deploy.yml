@@ -27,6 +27,7 @@ jobs:
       - name: Build Web
         run: npm run web:build
         env:
+          PUBLIC_URL: /symposium_app
           EXPO_PUBLIC_SUPABASE_URL: ${{ secrets.EXPO_PUBLIC_SUPABASE_URL }}
           EXPO_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.EXPO_PUBLIC_SUPABASE_ANON_KEY }}
       - name: Configure Pages
