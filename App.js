@@ -275,6 +275,16 @@ export default function App() {
   }
 
   async function clearProfile() {
+    const name = playerName;
+    if (name) {
+      setSessions(prev => prev.map(session => ({
+        ...session,
+        rooms: session.rooms.map(room => ({
+          ...room,
+          slots: room.slots.map(slot => (slot === name ? null : slot))
+        }))
+      })));
+    }
     await AsyncStorage.removeItem(PROFILE_KEY);
     setPlayerName('');
     setIsAdmin(false);
