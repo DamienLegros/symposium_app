@@ -254,6 +254,14 @@ export default function App() {
       setNameError('Enter a name.');
       return;
     }
+    if (name.length < 2 || name.length > 20) {
+      setNameError('Name must be 2-20 characters.');
+      return;
+    }
+    if (!/^[a-zA-Z0-9_-]+$/.test(name)) {
+      setNameError('Use letters, numbers, - or _.');
+      return;
+    }
     setNameError('');
 
     if (supabase) {
@@ -284,6 +292,9 @@ export default function App() {
           slots: room.slots.map(slot => (slot === name ? null : slot))
         }))
       })));
+      if (supabase) {
+        await supabase.from(NAMES_TABLE).delete().eq('name', name);
+      }
     }
     await AsyncStorage.removeItem(PROFILE_KEY);
     setPlayerName('');
@@ -303,12 +314,23 @@ export default function App() {
   }
 
   function joinRoom(roomId) {
+    if (!playerName) {
+      Alert.alert('Register first', 'Please register a name before joining a room.');
+      setPage('register');
+      return;
+    }
     const session = sessions[activeSession];
     if (!session.registrationOpen || session.started) {
       Alert.alert('Registration closed');
       return;
     }
     const name = playerName || 'Guest';
+    for (const room of session.rooms) {
+      if (room.slots.includes(name)) {
+        Alert.alert('Already registered', 'You are already in a room.');
+        return;
+      }
+    }
     updateSession(activeSession, s => {
       const rooms = s.rooms.map(r => {
         if (r.id !== roomId) return r;
